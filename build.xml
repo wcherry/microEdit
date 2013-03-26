@@ -1,0 +1,18 @@
+<project name="all" default="dist" basedir=".">
+  <target name="clean" description="Cleans all of the projects" >
+	<ant dir="plugins\core" antfile="build.xml" target="clean" />
+	<ant dir="plugins\filesystem" antfile="build.xml" target="clean" />
+	<ant dir="plugins\grammars" antfile="build.xml" target="clean" />
+	<ant dir="plugins\help" antfile="build.xml" target="clean" />
+	<ant dir="plugins\tools" antfile="build.xml" target="clean" />
+	<ant dir="bootstrap" antfile="build.xml" target="clean" />
+  </target>
+  <target name="dist" description="Builds a distrubitable of all of the projects" >
+	<ant dir="plugins\core" antfile="build.xml" target="dist" />
+	<ant dir="plugins\filesystem" antfile="build.xml" target="dist" />
+	<ant dir="plugins\grammars" antfile="build.xml" target="dist" />
+	<ant dir="plugins\help" antfile="build.xml" target="dist" />
+	<ant dir="plugins\tools" antfile="build.xml" target="dist" />
+	<ant dir="bootstrap" antfile="build.xml" target="dist" />
+  </target>
+</project>

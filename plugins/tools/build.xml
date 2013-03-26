@@ -1,0 +1,90 @@
+<project name="tools" default="dist" basedir=".">
+    <description>
+        simple example build file
+    </description>
+  <!-- set global properties for this build -->
+  <property environment="env"/>
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="src.tests"  location="test"/>
+  <property name="reports.tests"  location="reports"/>
+  <property name="build.tests" location="build"/>
+  <property name="plugins" location="..\..\..\plugins"/>
+  <property name="lib" location="${plugins}\lib"/>
+  <property name="third.party.jars" location="c:\tools\jars"/>
+  
+
+  <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+    <classpath>
+      <fileset dir="${env.GROOVY_HOME}/lib" includes="*.jar"/>
+    </classpath>
+  </taskdef>
+  
+
+  <path id="project.class.path">
+    <pathelement location="${build}/"/>
+    <pathelement path="${java.class.path}/"/>
+    <fileset dir="${third.party.jars}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${plugins}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source " >
+    <groovyc srcdir="${src}" destdir="${build}">
+      <classpath refid="project.class.path"/>
+      <javac source="1.6" target="1.6" debug="on" />
+    </groovyc>
+  </target>
+
+  <target name="compile-test" depends="compile" description="compile the test source " >
+    <javac srcdir="${src.tests}" destdir="${build.tests}" debug="true">
+      <classpath refid="project.class.path"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile-test" description="tests the source " >
+    <junit printsummary="yes" haltonfailure="yes">
+      <classpath refid="project.class.path"/>
+
+      <formatter type="plain"/> 
+
+      <batchtest fork="yes" todir="${reports.tests}">
+        <fileset dir="${src.tests}">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+    </junit>  
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <mkdir dir="${dist}/lib"/>
+
+		<copy todir="${build}">
+			<fileset dir="res">
+				 <include name="**/*"/>
+			 </fileset>
+		</copy>
+
+    <jar jarfile="${dist}/lib/${ant.project.name}-${DSTAMP}.jar" basedir="${build}"/>
+    <jar jarfile="${plugins}\${ant.project.name}.jar" basedir="${build}"/>
+  </target>
+  
+  <target name="clean" description="clean up" >
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete dir="${build.tests}"/>
+  </target>
+</project>
