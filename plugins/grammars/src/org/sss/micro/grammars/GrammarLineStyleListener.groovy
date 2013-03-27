@@ -160,7 +160,7 @@ class GrammarLineStyleListener implements LineStyleListener {
             }
         }
         if (g.repository)
-            g.repository["storage-modifiers"].patterns.each {
+            g.repository["storage-modifiers"]?.patterns.each {
                 styles.addAll(processPattern(it, event.lineText, event.lineOffset))
             }
 
