@@ -61,7 +61,7 @@ class GrammarLineStyleListener implements LineStyleListener {
                         if (color) {
                             StyleRange style = new StyleRange(m.start(i) + lineOffset, m.end(i) - m.start(i), color, null)
                             styles << style
-                        }  else println "&&& No color map entry for ${token}"
+                        }  //else println "&&& No color map entry for ${token}"
                     } else {
                         // no capture groups means we match the entire text
                         def color = colorMap[pattern.name]
@@ -69,7 +69,7 @@ class GrammarLineStyleListener implements LineStyleListener {
                         if (color) {
                             StyleRange style = new StyleRange(m.start() + lineOffset, m.end() - m.start(), color, null)
                             styles << style
-                        }  else println "&&& No color map entry for ${pattern.name}"
+                        }  //else println "&&& No color map entry for ${pattern.name}"
                         //println "1b:Captured text '\${m[0][i]}' for token \${token} with color \$color\""
                     }
                 }
@@ -88,7 +88,7 @@ class GrammarLineStyleListener implements LineStyleListener {
                         if (color) {
                             StyleRange style = new StyleRange(m.start(i) + lineOffset, m.end(i) - m.start(i), color, null)
                             styles << style
-                        }  else println "&&& No color map entry for ${token}"
+                        }  //else println "&&& No color map entry for ${token}"
                     }
                 }
 
@@ -106,7 +106,7 @@ class GrammarLineStyleListener implements LineStyleListener {
                                     if (color) {
                                         StyleRange style = new StyleRange(m.start(i) + lineOffset, m.end(i) - m.start(i), color, null)
                                         styles << style
-                                    }  else println "&&& No color map entry for ${token}"
+                                    }  //else println "&&& No color map entry for ${token}"
                                 }
                             }
                         }
@@ -128,7 +128,7 @@ class GrammarLineStyleListener implements LineStyleListener {
                                 if (color) {
                                     StyleRange style = new StyleRange(m.start(i) + lineOffset, m.end(i) - m.start(i), color, null)
                                     styles << style
-                                }   else println "&&& No color map entry for ${token}"
+                                }   //else println "&&& No color map entry for ${token}"
                             }
                         }
 
@@ -169,7 +169,7 @@ class GrammarLineStyleListener implements LineStyleListener {
 
     } catch(Exception ex){
         System.err.println( "Failed to syntax highlight document due to error:")
-        ex.printStackTrace()
+        org.sss.micro.core.Helper.prettyPrintStackTrace(ex)
     }
     }
 

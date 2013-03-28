@@ -204,8 +204,8 @@ class GrammarsManager /*extends PluginCore*/ {
     void processGrammarFile(File file) {
         def map = Helper.processLanguageFile(file)
         String scope = map?.scopeName
-        if (!scope) {println "The langauge file $file is missing the required attribute 'scopeName'";return}
-        println "Processing grammar $scope from $file"
+        if (!scope) {/*println "The langauge file $file is missing the required attribute 'scopeName'";*/return}
+        //println "Processing grammar $scope from $file"
 
         Grammar g = getOrCreateGrammar(scope)
         GrammarHelper.updateGrammarFromMap(map, g)
@@ -217,7 +217,7 @@ class GrammarsManager /*extends PluginCore*/ {
             Grammar g = getOrCreateGrammar(snippet.scope)
             g.addSnippet(snippet.tabTrigger, snippet)
         }
-        else println "The snippet file ${file.absolutePath} is missing the scopeName attribute"
+        //else println "The snippet file ${file.absolutePath} is missing the scopeName attribute"
     }
 
     void processCommandFile(File file){}
