@@ -21,7 +21,7 @@ import org.sss.micro.swt.DialogHelper
 
 class ToolsManager {
     PluginContext context = null
-    File macrosDir = new File(System.getProperty("user.home", ".") + "\\micro\\macros")
+    File macrosDir = new File(System.getProperty("user.home", ".") + "\\.micro\\macros")
     List<Action> actions = []
 
     def load(PluginContext context) {
