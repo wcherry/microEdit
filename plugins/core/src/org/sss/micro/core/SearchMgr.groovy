@@ -23,10 +23,10 @@ import org.sss.micro.swt.DialogHelper
 
 class SearchMgr {
     private TextHighlighterStyler textHighlighter = null
-
     String lastSearchExpression = null
     String highlightGUID = null
     PluginContext context
+	SourceWindow win = null
 
     //        redraw()
     //if (ranges) {
@@ -36,6 +36,7 @@ class SearchMgr {
 
     SearchMgr(PluginContext context, SourceWindow win){
         this.context = context
+		this.win = win
 
         textHighlighter = new  TextHighlighterStyler(win.textArea)
         win.addLineStyler(textHighlighter)
@@ -48,7 +49,7 @@ class SearchMgr {
             highlightGUID = null
         }
         List ranges = []
-        //String text = document.content
+        String text = doc.content
         Pattern pattern = Pattern.compile(p)
         Matcher m = pattern.matcher(text)
         while (m) {
@@ -58,13 +59,14 @@ class SearchMgr {
         Color bg = context.appWindow.colors['red']
 
         highlightGUID = textHighlighter.highlightTextRanges(ranges, bg)
-        ranges
+        ranges.size()
     }
 
     void search() {
         lastSearchExpression = DialogHelper.showInputDialog(context, "Search", "Expression")
         if (lastSearchExpression) {
-            int cnt = highlightMatches(lastSearchExpression)
+            int cnt = highlightMatches(lastSearchExpression, win.document)
+			win.redraw()
             DialogHelper.showMessageDialog(context, "Search Results", "Found $cnt matche(s)")
         }
     }
