@@ -177,7 +177,6 @@ class SourceWindow implements Window {
         lineStylers.each{addLineStyler(it)}
 
 
-
         //FORNOW: Disable the background highlighter for now
         //backgroundStyler = new LineHighlighterStyler(context.appWindow.colors['light_yellow'])
         //textArea.addLineBackgroundListener(backgroundStyler)
@@ -190,10 +189,11 @@ class SourceWindow implements Window {
                 if (actionName) {
                     println "KeyStroke $ke produced action $actionName"
                     context.callAction(actionName)
-                    e.doit = false
                 }
             }
         })
+		// Remove key bindings for keys that we are mapping.
+		keyMap.each{k,v-> textArea.setKeyBinding(k.bindingCode, SWT.NULL)}
     }
 
     public Object getNativeControl() {

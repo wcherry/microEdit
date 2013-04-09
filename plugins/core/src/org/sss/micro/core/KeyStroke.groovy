@@ -21,4 +21,7 @@ package org.sss.micro.core
 class KeyStroke {
   int stateMask
   int keyCode
+	int getBindingCode(){
+		return stateMask|keyCode
+	}
 }
