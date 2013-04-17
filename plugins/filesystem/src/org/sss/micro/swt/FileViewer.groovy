@@ -24,6 +24,13 @@ class FileViewer {
 		directory = dir
 		win = new DockingWindow(context: context, title: 'File System Browser', setup: {
 			tree = new Tree(it.shell, SWT.BORDER)
+			new TreeItem(tree, 0)
+
+			topTree = System.properties.getProperty("user.home")
+			scanDirectory(new File(topTree), tree) //TODO: this should be saved across opening
+// 		expandTree()
+
+
             tree.addMouseListener(new MouseAdapter() {
                 void mouseDoubleClick(MouseEvent mouseEvent) {
                     TreeItem item = tree.getItem(new Point(mouseEvent.x, mouseEvent.y))
@@ -40,54 +47,31 @@ class FileViewer {
 			tree.addTreeListener(new TreeAdapter(){
 				void treeExpanded(TreeEvent e){
 					directory = e.item.getData(FULL_FILENAME_KEY)
-					def item = e.item.getItems()[0]
-					if(item.getData()!=null) return
-					item.dispose()
-					
 					scanDirectory(e.item.getData(FULL_FILENAME_KEY), e.item)
 				}
 			})
-
-
-			topTree = System.properties.getProperty("user.home")
-			scanDirectory(new File(topTree), tree) //TODO: this should be saved across opening
 		})
 	}
 
 	
 
 	protected scanDirectory(File dir,def tree){
-//		def directories = []
-		dir.eachFile{file->
-			if(file.name!='.' && file.name!='..'){
-				TreeItem item = new TreeItem(tree, 0)
-				item.text = file.name
-				// if(file.isFile()) 
-				item.setData(FULL_FILENAME_KEY, file)
-				if(file.isDirectory()) new TreeItem(item, 0)
-			}
-		}
-	//	new ManagedThread('File Browser', {scanDirectory(directories)}).start()
-	}
-		
-	protected scanDirectory(directories){
-        def moreDir = []
-		directories.each{entry->
-			def dir = entry[0]
-			def tree = entry[1]
-		
+		TreeItem item = null
+		if(tree.itemCount>0 && tree.getItem(0).getData(FULL_FILENAME_KEY)==null){
+			tree.getItem(0).dispose() // dispose the dummy node
+
+			println "Scanning directory ${dir.name} for changes"
 			dir.eachFile{file->
 				if(file.name!='.' && file.name!='..'){
-					TreeItem item = new TreeItem(tree, 0)
+					item = new TreeItem(tree, 0)
 					item.text = file.name
-					if(file.isFile()) item.setData(FULL_FILENAME_KEY, file)
-					if(file.isDirectory()) moreDir << [ file, item]
+					item.setData(FULL_FILENAME_KEY, file)
+					if(file.isDirectory()) new TreeItem(item, 0)	// add dummy node so that this sub-tree is expandable
 				}
 			}
 		}
-		if(!moreDir.isEmpty()) new ManagedThread('File Browser', {scanDirectory(moreDir)}).start()
 	}
-
+		
 	void expandTree(){
 		String dir = directory - topTree
 		println "Starting in directory $dir"
@@ -97,16 +81,14 @@ class FileViewer {
 			def item = findTreeItem(subTree, name)
 			if(item) {
 				tree.showItem(item)
-				tree.setSelection(item) 
 				subTree = item 
-
 				scanDirectory( item.getData(FULL_FILENAME_KEY),subTree)
-			}
+			} else { println "Not able to find sub tree in file browser for '$name'"}
 		}
 	}
 
 	def findTreeItem(def tree, String name){
-		if(!tree) return null
+		if(!tree || tree.isDisposed()) {println "Tree already disposed or null"; return null}
 		TreeItem item = tree.getItems().find{item->item.text == name }
 		return item
 	}
