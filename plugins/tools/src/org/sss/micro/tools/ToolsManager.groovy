@@ -20,9 +20,9 @@ import org.sss.micro.core.*
 import org.sss.micro.swt.DialogHelper
 
 class ToolsManager {
-    PluginContext context = null
-    File macrosDir = new File(System.getProperty("user.home", ".") + "\\.micro\\macros")
-    List<Action> actions = []
+    PluginContext context 	= null
+    File macrosDir 					=	null
+    List<Action> actions 		= []
 
     def load(PluginContext context) {
         println "Loading Tools plugin"
@@ -31,6 +31,7 @@ class ToolsManager {
 
     def start(PluginContext context) {
         println "Starting Tools plugin"
+		macrosDir = new File(context.usersPropertiesDirectory, "macros")
         if(!macrosDir.exists()) macrosDir.mkdirs();
 		refreshMacros()
     }

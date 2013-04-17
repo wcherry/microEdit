@@ -30,6 +30,7 @@ class Main {
         println "Loading Core plugin"
         appWindow = new AppWindow("µ-Edit v0.1.0", context)
         context.addBean('appWindow', appWindow)
+		context.usersPropertiesDirectory = new File("${System.getProperty('user.home', '.')}\\.micro\\")
         this.context = context
         context.addEventListener('newPluginsFound') {data ->
             println "New Plugins"

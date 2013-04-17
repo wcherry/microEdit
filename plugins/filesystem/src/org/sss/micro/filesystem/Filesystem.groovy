@@ -16,6 +16,8 @@
 */
 package org.sss.micro.filesystem
 
+import org.sss.micro.core.Helper
+
 import org.eclipse.swt.SWT
 import org.eclipse.swt.widgets.FileDialog
 import org.eclipse.swt.dnd.FileTransfer
@@ -29,9 +31,10 @@ import org.sss.micro.swt.FileViewer
 
 
 class Filesystem {
-    def context = null;
+    PluginContext context 			= null
 //    List registeredFileExtensions = []
-    FileViewer fileBrowser = null;
+    FileViewer fileBrowser 				= null
+	String lastBrowsedDirectory 	= null
 
     String openFile() {
         println("Open File")
@@ -102,7 +105,7 @@ class Filesystem {
 
     boolean toggleFileViewer(){
         if (!fileBrowser)
-            fileBrowser = new org.sss.micro.swt.FileViewer(context).show()
+            fileBrowser = new org.sss.micro.swt.FileViewer(context, lastBrowsedDirectory).show()
         else {
             fileBrowser.toggle()
         }
@@ -136,13 +139,21 @@ class Filesystem {
         //context.grammars.each{name, grammar->registeredFileExtensions << grammar.registeredFileExtensions}
         //registeredFileExtensions = registeredFileExtensions.flatten()
 
+		loadProperties()
+
         println "Completed starting Filesystem plugin"
 
     }
 
     def startMain(PluginContext context) {}
 
-    def stop(PluginContext context) {}
+    def stop(PluginContext context) {
+		println "Stopping Filesystem plugin."
+		if(fileBrowser){
+			lastBrowsedDirectory = fileBrowser.directory
+		}
+		storeProperties()
+	}
 
     def unload(PluginContext context) {}
 
@@ -153,4 +164,38 @@ class Filesystem {
         }
         return longname
     }
+
+	void loadProperties(){
+		Properties props = new Properties()
+		try{
+			File propFile = new File(context.usersPropertiesDirectory, "filesystem.properties")
+			if(propFile.exists()){
+				FileInputStream fis = new FileInputStream(propFile)
+				props.load(fis)
+				fis.close()
+			}
+		} catch(Exception ex){
+			Helper.prettyPrintStackTrace(ex)
+		}
+
+		// Load each property that we persists.
+
+		lastBrowsedDirectory = props.getProperty("directory.lastBrowsed", System.getProperty('user.home', '.'))
+	}
+
+	void storeProperties(){
+		Properties props = new Properties()
+
+		props.setProperty("directory.lastBrowsed", lastBrowsedDirectory)
+
+		try{
+			FileOutputStream out = new FileOutputStream(new File(context.usersPropertiesDirectory, "filesystem.properties"))
+			props.store(out, 'microEdit filesystem plugin')
+			out.flush()
+			out.close()
+		} catch(Exception ex){
+			Helper.prettyPrintStackTrace(ex)
+		}
+	}
+
 }
