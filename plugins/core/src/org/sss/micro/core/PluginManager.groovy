@@ -1,5 +1,5 @@
 /*
-* Copyright Â© 2013 William R. Cherry
+* Copyright © 2013 William R. Cherry
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -75,6 +75,20 @@ class PluginManager {
 		}
 	}
   
+	def stopPlugins(){
+		plugins.each{name,plugin->
+			if(plugin.pluginInstance.hasMethod('stop'))
+				plugin.pluginInstance.stop(context)
+		}
+	}
+
+	def unloadPlugins(){
+		plugins.each{name,plugin->
+			if(plugin.pluginInstance.hasMethod('unload'))
+				plugin.pluginInstance.unload(context)
+		}
+	}
+
   def loadResources(String name){
     try{
 		def res = ResourceBundle.getBundle("${name}Resources")

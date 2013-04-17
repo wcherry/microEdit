@@ -1,5 +1,5 @@
 /*
-* Copyright Â© 2013 William R. Cherry
+* Copyright © 2013 William R. Cherry
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -72,6 +72,8 @@ class Application {
             println "starting"
             try {pluginMgr.startMain()} catch (Throwable t) {System.err.println "You threw this all the way to the boot strap!!! ${t.message}"; Helper.prettyPrintStackTrace(t)}
             println "Ending"
+            pluginMgr.stopPlugins()
+            pluginMgr.unloadPlugins()
         } catch (Exception ex) {
             Helper.prettyPrintStackTrace(ex)
         }
