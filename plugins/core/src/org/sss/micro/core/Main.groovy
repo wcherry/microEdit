@@ -69,6 +69,16 @@ class Main {
 
     def start(PluginContext context) {
         println "Starting Core plugin"
+		context.registerEvent('applicationShuttingdown')
+		context.shell.addListener(SWT.Close, new Listener() {
+      		public void handleEvent(Event event) {
+				context.fireEvent('applicationShuttingdown', [:])
+				boolean flag= closeAllDocuments()
+				println "Flag: $flag"
+        		event.doit = flag;
+      		}
+    	});
+
 
         // merge the cached menus and keymaps with the new ones
 
@@ -106,6 +116,8 @@ class Main {
 
     def quitApp() {
         //TODO: Add more stuff to do when exiting.
+		context.fireEvent('applicationShuttingdown', [:])
+		closeAllDocuments()
         context.shell.dispose()
     }
 

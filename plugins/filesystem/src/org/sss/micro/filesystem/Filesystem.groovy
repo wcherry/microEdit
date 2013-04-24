@@ -59,6 +59,7 @@ class Filesystem {
         Document document = new FileBackedDocument(file: file)
         Window window = new SourceWindow(document: document)
         document.load()
+		document.modified = false
         window.title = shortName(filename)
         context.appWindow.addWindow(window)
         context.fireEvent('documentLoaded', [window: window, filename: filename])
@@ -73,6 +74,7 @@ class Filesystem {
         if (doc instanceof FileBackedDocument && doc.file) {
             context.fireEvent('documentAboutToSave', [window: window, document: doc, filename: doc.file.name])
             doc.save()
+			window.modified = false
             context.fireEvent('documentSaved', [window: window, document: doc, filename: doc.file.name])
         } else saveFileAs()
     }
@@ -99,6 +101,7 @@ class Filesystem {
             doc.file = file
             doc.save()
             window.title = shortName(filename)
+			window.modified = false
             context.fireEvent('documentSaved', [window: window, document: doc, filename: doc.file.name])
         }
     }

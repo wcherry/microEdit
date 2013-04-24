@@ -54,15 +54,15 @@ class SourceWindow implements Window {
 
     protected undoMgr = null
 
-    private Document doc = null
-    String title = "Untitled"
+    private Document document = null
+    String title = "Untitled"		//TODO: Fix this hardcode,should come from resource file (context.getResourceString(...))
     PluginContext context = null
     Map keyMap = [:]
     Map data = [:]
 
-    void setBody(String s) {document.content = s}
+    void setBody(String s) {getDocument().content = s}
 
-    String getBody() {document.content}
+    String getBody() {getDocument().content}
 
     void setTitle(String t) {
         title = t
@@ -124,20 +124,18 @@ class SourceWindow implements Window {
 
 
     Document getDocument() {
-        if (!doc) doc = new Document()
-        return doc
+        if (!document) setDocument(new Document())
+        return document
     }
 
-    void setDocument(Document document) {
-        doc = document
-        doc.nativeObject.addDocumentListener([
+    void setDocument(Document doc) {
+        document = doc
+        document.nativeObject.addDocumentListener([
                 documentAboutToBeChanged: {event ->},
                 documentChanged: {event ->
-					if (setModified(true))
-					//if(data.tabItem)
-                        data?.tabItem?.setText(title + "*")
+                    setModified(true)    
                 }
-		] as org.eclipse.jface.text.IDocumentListener)
+        ] as org.eclipse.jface.text.IDocumentListener)
 
     }
 
@@ -158,7 +156,7 @@ class SourceWindow implements Window {
         compositeRuler.addDecorator(0, lineNumbers);
 
         viewer = new SourceViewer(windowContainer.getNativeControl(), compositeRuler, SWT.FULL_SELECTION | SWT.HORIZONTAL | SWT.VERTICAL);
-        viewer.setDocument(document.nativeObject);
+        viewer.setDocument(getDocument().nativeObject);
 
         textArea = viewer.textWidget
 
@@ -202,10 +200,16 @@ class SourceWindow implements Window {
 
 
     private boolean setModified(boolean modified) {
-		if (doc.modified == modified) return false
-		doc.modified = modified
+		if (document.modified == modified) return false
+		def t = title + (modified?"*":"")
+ 		data?.tabItem?.text = t
+        document.modified = modified
         return true
     }
+
+	boolean isModified(){
+		document.modified
+	} 
 
     def propertyMissing(key) {
         data[key]

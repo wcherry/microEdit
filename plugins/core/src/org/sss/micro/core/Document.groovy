@@ -37,6 +37,9 @@ class Document {
         nativeDocument.replace(pos, 0, text, new Date().getDate())
     }
 
+	void setModified(boolean f){
+		modified = f
+	}
 
     String getContent() {
         nativeDocument.get()

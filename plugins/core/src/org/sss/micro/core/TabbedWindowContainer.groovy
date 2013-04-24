@@ -32,7 +32,7 @@ import org.eclipse.swt.events.SelectionListener
 class TabbedWindowContainer implements WindowContainer {
   CTabFolder tabFolder = null // Native
 
-  //ArrayList<Window> windows = new ArrayList<Window>()
+  ArrayList<Window> windows = new ArrayList<Window>()
   AppWindow appWindow = null
   PluginContext context = null
 
@@ -41,10 +41,23 @@ class TabbedWindowContainer implements WindowContainer {
   public TabbedWindowContainer(AppWindow appWindow){
     tabFolder = new CTabFolder (appWindow.getNativeShell(), SWT.CLOSE)
     tabFolder.setSimple(false)
+	tabFolder.addCTabFolder2Listener([
+			close: {evnt->
+				def win = evnt.item.getData('window')
+				if(!promptSaveDirtyWindow(win)) evnt.doit = false	// flag as not closeable
+			}
+		] as CTabFolder2Listener)
+
+	tabFolder.addSelectionListener([
+			widgetDefaultSelected :{evnt-> context.fireEvent("windowSelected", ['window': evnt.item.getData('window')])},
+			widgetSelected : {evnt->context.fireEvent("windowSelected", ['window': evnt.item.getData('window')]) }
+		] as SelectionListener) 
+
     this.appWindow = appWindow
     context = appWindow.context
     context.registerEvent('windowAdd')
     context.registerEvent('windowRemove')
+    context.registerEvent('windowSelected')
   }
 
   public Window getFocusedWindow(){
@@ -89,7 +102,7 @@ class TabbedWindowContainer implements WindowContainer {
   
   public void addWindow(Window window){
 //    assert(!windows.contains(window))
-//    windows.add(window)
+    windows.add(window)
     window.keyMap = context.keyMap
     
     context.fireEvent('windowAdd', [window: window, container: this])

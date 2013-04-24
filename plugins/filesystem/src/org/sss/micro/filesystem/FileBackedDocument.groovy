@@ -14,7 +14,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-package org.sss.micro.filesystem
+package org.sss.micro.filesystem 
 
 import org.sss.micro.core.Document
 
@@ -29,7 +29,7 @@ class FileBackedDocument  extends Document{
 
   FileBackedDocument(Document doc){
     super(doc.nativeDocument)
-    modified = doc.modified 
+    //modified = doc.modified 
   }
 
   void load(){
@@ -37,6 +37,6 @@ class FileBackedDocument  extends Document{
   }
   void save(){
     file.text = this.content
-    this.modified = false
+    //this.modified = false
   }
 }
