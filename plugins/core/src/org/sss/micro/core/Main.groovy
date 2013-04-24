@@ -28,7 +28,7 @@ class Main {
 
     def load(PluginContext context) {
         println "Loading Core plugin"
-        appWindow = new AppWindow("µ-Edit v0.1.0", context)
+	 appWindow = new AppWindow("µ-Edit v0.1.0", context)
         context.addBean('appWindow', appWindow)
 		context.usersPropertiesDirectory = new File("${System.getProperty('user.home', '.')}\\.micro\\")
         this.context = context
@@ -85,6 +85,15 @@ class Main {
     def newDocument() {
         appWindow.addWindow(new SourceWindow())
     }
+
+	def closeDocument(){
+		println "Closing ${appWindow.focusedWindow.title}"
+		appWindow.closeWindow(appWindow.focusedWindow)
+	}
+
+	def closeAllDocuments(){
+		appWindow.windowContainer.windows.find{appWindow.closeWindow(it)} == null
+	}
 
     def displaySysProps() {
         context.beans.each {k, v -> println "Bean $k = $v"}

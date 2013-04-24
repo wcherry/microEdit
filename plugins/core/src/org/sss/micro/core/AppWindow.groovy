@@ -124,6 +124,7 @@ class AppWindow {
         display = new Display()
         context.display = display
         shell = new Shell(display)
+
         context.shell = shell
         shell.setText(aTitle)
         shell.setSize(800, 500)
@@ -147,6 +148,10 @@ class AppWindow {
         w.context = context //FORNOW: Make sure that plain text windows have a context
         return w
     }
+
+	boolean closeWindow(Window w){
+		windowContainer.closeWindow(w)
+	}
 
     public Window getFocusedWindow() {
         windowContainer.getFocusedWindow()

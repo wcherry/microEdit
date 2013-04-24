@@ -47,8 +47,8 @@ class DialogHelper {
         dlg.open()
     }
 
-    public void alert(PluginContext context, String message, String title = "Alert") {
-        def msgBox = new MessageBox(context.appWindow.shell, SWT.ICON_INFORMATION | SWT.OK)
+    public static int alert(PluginContext context, String message, String title = "Alert") {
+        def msgBox = new MessageBox(context.appWindow.shell, SWT.ICON_INFORMATION | SWT.YES | SWT.NO | SWT.CANCEL)
         msgBox.message = message
         msgBox.text = title
         msgBox.open()

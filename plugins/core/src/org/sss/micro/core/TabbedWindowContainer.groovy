@@ -18,6 +18,8 @@ package org.sss.micro.core
 
 import java.util.*
 
+import org.sss.micro.swt.*
+
 import org.eclipse.swt.*
 import org.eclipse.swt.events.*
 import org.eclipse.swt.graphics.*
@@ -28,7 +30,7 @@ import org.eclipse.swt.custom.*
 class TabbedWindowContainer implements WindowContainer {
   CTabFolder tabFolder = null // Native
 
-//  ArrayList<Window> windows = new ArrayList<Window>()
+  //ArrayList<Window> windows = new ArrayList<Window>()
   AppWindow appWindow = null
   PluginContext context = null
 
@@ -41,7 +43,6 @@ class TabbedWindowContainer implements WindowContainer {
     context = appWindow.context
     context.registerEvent('windowAdd')
     context.registerEvent('windowRemove')
-    
   }
 
   public Window getFocusedWindow(){
@@ -52,6 +53,25 @@ class TabbedWindowContainer implements WindowContainer {
     tabFolder.setSelection(index)
   }
 
+	boolean promptSaveDirtyWindow(Window win){
+		boolean closeable = false
+		if(win.modified) {
+			int state = DialogHelper.alert(context, "Unsaved Document", "Document '${win.title}' not saved. save Diocument")
+			if(state == SWT.YES) win.document.save()
+			if(state == SWT.YES | state == SWT.NO){
+				context.fireEvent("windowRemove", ['window': win])
+				closeable = true
+			}
+		} else closeable = true
+		return closeable
+	}
+
+	boolean closeWindow(Window win){
+		if(promptSaveDirtyWindow(win)){
+			removeWindow(win)
+		}
+	}
+
   public List getWindows(){
     return tabFolder.items.collect{it.getData('window')}
   }
@@ -59,10 +79,15 @@ class TabbedWindowContainer implements WindowContainer {
   def getNativeControl(){
     tabFolder
   }
+
+	void removeWindow(Window win){
+		windows.remove(win)
+		win.tabItem.dispose()
+	}
   
   public void addWindow(Window window){
 //    assert(!windows.contains(window))
-   // windows.add(window)
+//    windows.add(window)
     window.keyMap = context.keyMap
     
     context.fireEvent('windowAdd', [window: window, container: this])

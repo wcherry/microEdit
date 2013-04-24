@@ -13,6 +13,16 @@ actions = [
                 description: 'Creates a new document',
                 execute: 'newDocument'
         ],
+        closeAction: [
+                name: 'Close',
+                description: 'Closes the currently focused document',
+                execute: 'closeDocument'
+        ],
+        closeAllAction: [
+                name: 'Close All',
+                description: 'Closes all opened documents',
+                execute: 'closeAllDocuments'
+        ],
         sysPropsAction: [
                 name: 'System Properties',
                 description: 'Displays certain system properties',
@@ -79,7 +89,7 @@ keyMap = [
 ]
 
 menu = [
-        '&File': ['newAction': 10, 'quitAction': 99],
+        '&File': ['newAction': 10, 'closeAction': 41, 'closeAllAction':42, 'quitAction': 99],
         '&Edit': ['undoAction': 10, 'redoAction': 15, 'cutAction': 20, 'copyAction': 25, 'pasteAction': 30, 'selectAllAction': 40],
         '&Options': ['changeFontAction': 10],
         '&Search': ['searchAction': 10]
