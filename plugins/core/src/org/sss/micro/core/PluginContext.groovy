@@ -19,16 +19,17 @@ package org.sss.micro.core
 import org.sss.micro.swt.Helper
 
 class PluginContext {
-    def pluginDir
-    def plugins
-    def beans = [:]
-    def properties = [:]
-    def actions = [:]
-    def menu = [:]
-    Map keyMap = [:]
-    private List keyList = []
-    Map events = [:]
+    String pluginDir 	= null
+    Map beans 			= [:]
+    Map properties 		= [:]
+    Map actions 			= [:]
+    Map menu 			= [:]
+    Map keyMap 		= [:]
+    List keyList 			= []
+    Map events 			= [:]
+	Map resources		= [:]
 
+	def plugins				=null
 
     void registerEvent(String name) {
         events[name] = []
@@ -104,6 +105,11 @@ class PluginContext {
     def addBean(name, obj) {
         beans[name] = obj
     }
+
+	String getResourceString(String key, Object...args){
+		String res = resources.get(key)
+		return (!res||!args)?res:java.text.MessageFormat.format(res,args)
+	}
 
     def propertyMissing(name) {
         def value = beans[name]

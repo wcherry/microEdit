@@ -15,7 +15,7 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.sss.micro.core
-
+ 
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.LineStyleListener
 import org.eclipse.swt.custom.StyledText
@@ -42,7 +42,7 @@ import org.eclipse.jface.text.source.IAnnotationAccessExtension
 class SourceWindow implements Window {
     //SWT Controls
     private StyledText textArea = null
-    public SourceViewer viewer
+    public SourceViewer viewer =null
     private CompositeRuler compositeRuler
     public AnnotationRulerColumn annotationRuler
     private LineNumberRulerColumn lineNumbers
@@ -115,7 +115,7 @@ class SourceWindow implements Window {
     void undo() {
         if (undoMgr.undoable())
             undoMgr.undo()
-        else DialogHelper.showMessageDialog(context, "Undo Action", "Nothing to Undo!!!")
+        else DialogHelper.showMessageDialog(context, context.getResourceString("undoDialog.noresults.title"),context.getResourceString("undoDialog.noresults.text"))
     }
 
     void redo() {
@@ -133,11 +133,11 @@ class SourceWindow implements Window {
         doc.nativeObject.addDocumentListener([
                 documentAboutToBeChanged: {event ->},
                 documentChanged: {event ->
-                    if (setModified(true))
-                    //if(data.tabItem)
+					if (setModified(true))
+					//if(data.tabItem)
                         data?.tabItem?.setText(title + "*")
                 }
-        ] as org.eclipse.jface.text.IDocumentListener)
+		] as org.eclipse.jface.text.IDocumentListener)
 
     }
 
@@ -202,8 +202,8 @@ class SourceWindow implements Window {
 
 
     private boolean setModified(boolean modified) {
-        if (doc.modified == modified) return false
-        doc.modified = modified
+		if (doc.modified == modified) return false
+		doc.modified = modified
         return true
     }
 

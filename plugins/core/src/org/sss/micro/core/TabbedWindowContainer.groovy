@@ -26,6 +26,8 @@ import org.eclipse.swt.graphics.*
 import org.eclipse.swt.layout.*
 import org.eclipse.swt.widgets.*
 import org.eclipse.swt.custom.*
+import org.eclipse.swt.custom.CTabFolder2Listener
+import org.eclipse.swt.events.SelectionListener
 
 class TabbedWindowContainer implements WindowContainer {
   CTabFolder tabFolder = null // Native
@@ -56,7 +58,7 @@ class TabbedWindowContainer implements WindowContainer {
 	boolean promptSaveDirtyWindow(Window win){
 		boolean closeable = false
 		if(win.modified) {
-			int state = DialogHelper.alert(context, "Unsaved Document", "Document '${win.title}' not saved. save Diocument")
+			int state = DialogHelper.alert(context, context.getResourceString("unsavedDocument.text", win.title), context.getResourceString("unsavedDocument.title"))
 			if(state == SWT.YES) win.document.save()
 			if(state == SWT.YES | state == SWT.NO){
 				context.fireEvent("windowRemove", ['window': win])

@@ -63,11 +63,11 @@ class SearchMgr {
     }
 
     void search() {
-        lastSearchExpression = DialogHelper.showInputDialog(context, "Search", "Expression")
+        lastSearchExpression = DialogHelper.showInputDialog(context, context.getResourceString('searchDialog.title'), context.getResourceString('searchDialog.text'))
         if (lastSearchExpression) {
             int cnt = highlightMatches(lastSearchExpression, win.document)
 			win.redraw()
-            DialogHelper.showMessageDialog(context, "Search Results", "Found $cnt matche(s)")
+            DialogHelper.showMessageDialog(context, context.getResourceString('searchDialog.results.title'), context.getResourceString('searchDialog.results.text', cnt))
         }
     }
 

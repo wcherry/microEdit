@@ -32,6 +32,9 @@ import org.eclipse.swt.layout.FillLayout
 import org.eclipse.swt.widgets.FontDialog
 import org.eclipse.swt.graphics.FontData
 import org.eclipse.swt.graphics.Font
+import org.eclipse.swt.widgets.Event
+import org.eclipse.swt.widgets.Listener
+import org.eclipse.swt.widgets.MessageBox
 
 /**
  * Main application window. Contains the window container, menu bar, etc...
@@ -99,7 +102,7 @@ class AppWindow {
             def actionName = action.name
             if (action) {
                 MenuItem menuItem = new MenuItem(subMenuItem, SWT.NULL)
-                String name = context.resources.get("menu.${actionName}.label".toString())
+                String name = context.getResourceString("menu.${actionName}.label".toString())
                 if(!name) name = action.name
                 println "MENU: $actionName = $name"
                 menuItem.setText(name)
@@ -163,7 +166,7 @@ class AppWindow {
 
     public void changeFont(){
         FontDialog fd = new FontDialog(shell, SWT.NONE)
-        fd.setText("Select Font")
+        fd.setText(context.getResourceString("fontdialog.title"))
         fd.setRGB(defaultColor?.getRGB()?:new RGB(0,0,0))
         FontData fontData = null
         if(defaultFont)

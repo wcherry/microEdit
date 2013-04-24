@@ -17,6 +17,11 @@
 package org.sss.micro.core
 
 import org.sss.micro.swt.Helper
+import org.sss.micro.swt.DialogHelper
+
+import org.eclipse.swt.widgets.Event
+import org.eclipse.swt.widgets.Listener
+import org.eclipse.swt.SWT
 
 class Main {
     // Extension Points
@@ -28,7 +33,7 @@ class Main {
 
     def load(PluginContext context) {
         println "Loading Core plugin"
-	 appWindow = new AppWindow("µ-Edit v0.1.0", context)
+        appWindow = new AppWindow(context.getResourceString("application.title"), context)
         context.addBean('appWindow', appWindow)
 		context.usersPropertiesDirectory = new File("${System.getProperty('user.home', '.')}\\.micro\\")
         this.context = context
@@ -152,5 +157,3 @@ class Main {
         }
     }
 }
-
-    
